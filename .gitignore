@@ -218,3 +218,37 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# ==========================================
+# Vision-to-Action: Local ML Research Assets
+# ==========================================
+
+# Udacity driving dataset
+/data/
+/udacity-data.zip
+
+# Unity driving simulator
+/simulator/
+
+# Trained models and checkpoints
+/checkpoints/
+*.pt
+*.pth
+*.ckpt
+
+# Generated training results
+/experiments/
+/outputs/
+
+# Environment variables and secrets
+.env
+.env.*
+!.env.example
+
+# macOS metadata
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Local IDE settings
+.vscode/
