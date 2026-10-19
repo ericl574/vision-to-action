@@ -233,6 +233,7 @@ __marimo__/
 # Trained models and checkpoints
 /checkpoints/
 *.pt
+!benchmarks/metadrive/weights/action_v2_dagger_best.pt
 *.pth
 *.ckpt
 

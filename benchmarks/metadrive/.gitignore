@@ -1,0 +1,28 @@
+# Keep the curated portfolio reel and its two source routes; local diagnostics are regenerable.
+demo/*.mp4
+!demo/action_v2_two_test_roads.mp4
+!demo/action_v2_highlights.mp4
+!demo/action_v2_test_seed_7000.mp4
+!demo/action_v2_test_seed_7011.mp4
+demo/*.csv
+demo/*.json
+debug_runs/
+run_debug.py
+# Curate only the benchmark rows quoted in the project README.
+results*.csv
+results*.json
+zero_baseline.csv
+!results_zero_development_20.csv
+!results_zero_development_20.json
+!results_action_v1_development_20.csv
+!results_action_v1_development_20.json
+!results_action_v2_dagger_development_20.csv
+!results_action_v2_dagger_development_20.json
+!results_zero_final_test_20.csv
+!results_zero_final_test_20.json
+!results_action_v2_final_test_20.csv
+!results_action_v2_final_test_20.json
+!results_zero_secondary_test_20_h1000.csv
+!results_zero_secondary_test_20_h1000.json
+!results_action_v2_secondary_test_20_h1000.csv
+!results_action_v2_secondary_test_20_h1000.json
