@@ -234,6 +234,7 @@ __marimo__/
 /checkpoints/
 *.pt
 !benchmarks/metadrive/weights/action_v2_dagger_best.pt
+!benchmarks/metadrive/weights/action_v3_dagger_best.pt
 *.pth
 *.ckpt
 

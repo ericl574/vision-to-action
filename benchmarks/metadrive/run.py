@@ -215,7 +215,7 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--policy", choices=["model", "trajectory", "action", "zero"], default="action")
     parser.add_argument("--checkpoint", type=Path,
-                        default=ROOT / "benchmarks/metadrive/weights/action_v2_dagger_best.pt")
+                        default=ROOT / "benchmarks/metadrive/weights/action_v3_dagger_best.pt")
     parser.add_argument("--device", choices=["auto", "cpu", "mps"], default="auto")
     parser.add_argument("--episodes", type=int, default=5)
     parser.add_argument("--seed", type=int, default=5000)

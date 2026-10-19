@@ -4,6 +4,8 @@ demo/*.mp4
 !demo/action_v2_highlights.mp4
 !demo/action_v2_test_seed_7000.mp4
 !demo/action_v2_test_seed_7011.mp4
+!demo/action_v3_final_test_seed_8013.mp4
+!demo/action_v3_final_test_seed_8018.mp4
 demo/*.csv
 demo/*.json
 debug_runs/
@@ -18,6 +20,10 @@ zero_baseline.csv
 !results_action_v1_development_20.json
 !results_action_v2_dagger_development_20.csv
 !results_action_v2_dagger_development_20.json
+!results_action_v2_dagger_development_20_h1000.csv
+!results_action_v2_dagger_development_20_h1000.json
+!results_action_v3_dagger_development_20_h1000.csv
+!results_action_v3_dagger_development_20_h1000.json
 !results_zero_final_test_20.csv
 !results_zero_final_test_20.json
 !results_action_v2_final_test_20.csv
@@ -26,3 +32,7 @@ zero_baseline.csv
 !results_zero_secondary_test_20_h1000.json
 !results_action_v2_secondary_test_20_h1000.csv
 !results_action_v2_secondary_test_20_h1000.json
+!results_action_v3_final_test_20_h1000.csv
+!results_action_v3_final_test_20_h1000.json
+!results_zero_final_test_20_h1000.csv
+!results_zero_final_test_20_h1000.json

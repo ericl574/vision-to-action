@@ -1,0 +1,6 @@
+# Runtime dependencies for the camera-based MetaDrive benchmark.
+# MetaDrive pulls in its simulator/runtime dependencies transitively.
+metadrive-simulator==0.4.3
+torch>=2.0
+numpy>=1.24
+opencv-python>=4.8

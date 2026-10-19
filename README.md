@@ -2,7 +2,7 @@
 
 Camera-based imitation learning for closed-loop driving in MetaDrive. This is an independent research and portfolio project, not a production self-driving system or an official leaderboard entry.
 
-[Watch the 43-second driving highlights](benchmarks/metadrive/demo/action_v2_highlights.mp4) · [Full footage of both held-out routes](benchmarks/metadrive/demo/action_v2_two_test_roads.mp4) · [Benchmark implementation](benchmarks/metadrive/run.py)
+[Watch a v3 held-out route (seed 8013)](benchmarks/metadrive/demo/action_v3_final_test_seed_8013.mp4) · [Second v3 route (seed 8018)](benchmarks/metadrive/demo/action_v3_final_test_seed_8018.mp4) · [Earlier v2 highlights](benchmarks/metadrive/demo/action_v2_highlights.mp4)
 
 ## What the student actually does
 
@@ -24,30 +24,41 @@ All rows use MetaDrive 0.4.3, 3-block generated roads, traffic density 0.05, fix
 | Development, seeds 5010–5029 / 600 steps | [Zero steering](benchmarks/metadrive/results_zero_development_20.csv) | 0/20 | 0.417 |
 | Development, seeds 5010–5029 / 600 steps | [Direct behavior cloning](benchmarks/metadrive/results_action_v1_development_20.csv) | 1/20 | 0.360 |
 | Development, seeds 5010–5029 / 600 steps | [Behavior cloning + DAgger](benchmarks/metadrive/results_action_v2_dagger_development_20.csv) | 4/20 | 0.437 |
+| Development, seeds 5010–5029 / 1,000 steps | [v2 DAgger](benchmarks/metadrive/results_action_v2_dagger_development_20_h1000.csv) | 4/20 | 0.437 |
+| Development, seeds 5010–5029 / 1,000 steps | [v3 DAgger](benchmarks/metadrive/results_action_v3_dagger_development_20_h1000.csv) | 7/20 | 0.615 |
 | First untouched test, seeds 6000–6019 / 600 steps | [Zero steering](benchmarks/metadrive/results_zero_final_test_20.csv) | 0/20 | 0.304 |
 | First untouched test, seeds 6000–6019 / 600 steps | [Behavior cloning + DAgger](benchmarks/metadrive/results_action_v2_final_test_20.csv) | 0/20 | 0.412 |
 | Separate untouched test, seeds 7000–7019 / 1,000 steps | [Zero steering](benchmarks/metadrive/results_zero_secondary_test_20_h1000.csv) | 2/20 | 0.353 |
 | Separate untouched test, seeds 7000–7019 / 1,000 steps | [Behavior cloning + DAgger](benchmarks/metadrive/results_action_v2_secondary_test_20_h1000.csv) | 2/20 | 0.335 |
+| Final held-out test, seeds 8000–8019 / 1,000 steps | [Zero steering](benchmarks/metadrive/results_zero_final_test_20_h1000.csv) | 1/20 | 0.295 |
+| Final held-out test, seeds 8000–8019 / 1,000 steps | [Selected v3 DAgger model](benchmarks/metadrive/results_action_v3_final_test_20_h1000.csv) | 3/20 | 0.545 |
 
-The two test-route completions shown in the videos are seeds **7000** and **7011**, 224 m and 296 m traveled. Neither of those two roads was completed by zero steering. They are selected successes from the full 20-route test, **not** a 100% success claim. Generalization remains the main open problem. The 1,000-step test is a separately labeled configuration; it was not the original 600-step holdout.
+The selected checkpoint is [`action_v3_dagger_best.pt`](benchmarks/metadrive/weights/action_v3_dagger_best.pt); the earlier v2 checkpoint and videos remain available. On the matched development set, v3 improved clean completion (7/20 vs. v2's 4/20), mean route completion (0.615 vs. 0.437), and road-departure rate (60% vs. 80%), but had 2 collisions versus none. On fresh seeds 8000–8019, v3 achieved 3/20 clean completions versus 1/20 for zero steering, with mean route completion 0.545 vs. 0.295, road departures 80% vs. 95%, and collisions 10% for both. Neither policy timed out in that test. These results show a measurable but modest improvement, not robust driving.
+
+The two v3 videos above are successful routes selected from the full 20-seed final test: seed **8013** completed 98.8% of its route over 392.5 m; seed **8018** completed 99.2% over 530.3 m. They illustrate successful cases and should be read alongside the full test table, not as a typical-run or 100% success claim. The earlier v2 videos are retained as historical artifacts.
 
 The fixed-seed CSV/JSON files and a strict-success summarizer are under [`benchmarks/metadrive/`](benchmarks/metadrive/). This is a custom reproducible benchmark, not a MetaDrive leaderboard score.
 
 ## Reproduce
 
-The project has been run on an Apple Silicon Mac with Python in a `metadrive-ai` Conda environment, PyTorch with MPS, and MetaDrive 0.4.3. Run commands from the repository root. The included checkpoint is only for the compact direct-action model; expert data and larger experiment checkpoints are excluded from Git because of size.
+The project has been run on an Apple Silicon Mac with Python 3.11, PyTorch with MPS, and MetaDrive 0.4.3. Run commands from the repository root. The compact v2 and v3 direct-action checkpoints are included; raw expert data and training checkpoints are excluded.
 
 ```bash
+# Install the simulator and inference dependencies in a fresh environment.
+conda create -n vision-to-action python=3.11 -y
+conda activate vision-to-action
+python -m pip install -r requirements-metadrive.txt
+
 # Verify coordinate-frame, timing, speed-unit, and success-rule checks.
 python -m unittest benchmarks.metadrive.test_pipeline -v
 
 # Run the packaged camera model and a matched zero-steer baseline.
 python benchmarks/metadrive/run.py --policy action \
-  --checkpoint benchmarks/metadrive/weights/action_v2_dagger_best.pt \
-  --seed 7000 --episodes 20 --max-steps 1000 \
+  --checkpoint benchmarks/metadrive/weights/action_v3_dagger_best.pt \
+  --seed 8000 --episodes 20 --max-steps 1000 \
   --output benchmarks/metadrive/reproduction_action.csv
 python benchmarks/metadrive/run.py --policy zero \
-  --seed 7000 --episodes 20 --max-steps 1000 \
+  --seed 8000 --episodes 20 --max-steps 1000 \
   --output benchmarks/metadrive/reproduction_zero.csv
 python benchmarks/metadrive/summarize_results.py \
   benchmarks/metadrive/reproduction_action.csv benchmarks/metadrive/reproduction_zero.csv
@@ -57,11 +68,13 @@ Recording uses the same model input resolution; a larger camera buffer can make 
 
 ```bash
 python benchmarks/metadrive/run.py --policy action \
-  --checkpoint benchmarks/metadrive/weights/action_v2_dagger_best.pt \
-  --seed 7000 --episodes 1 --max-steps 1000 \
+  --checkpoint benchmarks/metadrive/weights/action_v3_dagger_best.pt \
+  --seed 8013 --episodes 1 --max-steps 1000 \
   --camera-width 384 --camera-height 240 \
-  --record benchmarks/metadrive/demo/reproduced_seed_7000.mp4
+  --record benchmarks/metadrive/demo/reproduced_seed_8013.mp4
 ```
+
+On macOS with MetaDrive 0.4.3, RGB evaluation and recording require a logged-in desktop session for Panda3D's offscreen window; a physics-only headless session is not sufficient.
 
 Training and data-preparation commands, including the expert/DAgger boundary, are documented in [`benchmarks/metadrive/README.md`](benchmarks/metadrive/README.md). The real-data trajectory experiment remains in `prepare_comma1m.py`, `train_comma1m.py`, and `train_comma1m_v2.py`.
 
