@@ -4,13 +4,13 @@
 
 An independent research project exploring how a neural network can **learn to steer and control vehicle speed from camera observations**, then improve through feedback on its own driving mistakes. Built an end-to-end data collection, training, closed-loop evaluation, and visualization pipeline in CARLA.
 
-**[▶ Watch the 78-second driving demo](benchmarks/carla/demo/pilot_v2_heldout_reel.mp4)** · **[Full benchmark](benchmarks/carla/README.md)** · **[Model weights](benchmarks/carla/weights/pilot_v2_best_fp16.pt)**
+**[▶ Watch Driving Demo](https://youtu.be/2e8A-EQZihg)** · **[Full Benchmark](benchmarks/carla/README.md)** · **[Model Weights](benchmarks/carla/weights/pilot_v2_best_fp16.pt)**
 
 > **Key result — 2× clean route success:** DAgger improved held-out CARLA route completion from **5/15 (33.3%)** with behavior cloning to **10/15 (66.7%)**. These are limited, simulator-only results—not an official CARLA Leaderboard score.
 
 ## Demo and results
 
-The [demo reel](benchmarks/carla/demo/pilot_v2_heldout_reel.mp4) shows **three selected successful held-out routes**, with driving telemetry and model predictions overlaid. It illustrates what the model can do, but is not a representative sample of every run.
+The [78-second driving demo](https://youtu.be/2e8A-EQZihg) shows **three selected successful held-out routes**, with driving telemetry and model predictions overlaid. It illustrates what the model can do, but is not a representative sample of every run.
 
 | Policy | Clean successes (15 routes) | Mean route completion | Collisions | Red-light violations |
 | --- | ---: | ---: | ---: | ---: |
