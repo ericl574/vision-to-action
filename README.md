@@ -4,9 +4,9 @@ Camera-based imitation learning for closed-loop driving in MetaDrive. This is an
 
 [Watch a v3 held-out route (seed 8013)](benchmarks/metadrive/demo/action_v3_final_test_seed_8013.mp4) · [Second v3 route (seed 8018)](benchmarks/metadrive/demo/action_v3_final_test_seed_8018.mp4) · [Earlier v2 highlights](benchmarks/metadrive/demo/action_v2_highlights.mp4)
 
-## What the student actually does
+## What the Learner model actually does
 
-The student receives four RGB frames, spaced 0.5 seconds apart, and ego speed. A CNN-GRU predicts a steering command every 0.1 seconds. A simple proportional speed controller handles acceleration to a fixed 20 km/h target. No LiDAR, lane coordinates, route waypoints, or expert policy outputs enter the student at inference time.
+The Learning Model receives four RGB frames, spaced 0.5 seconds apart, and ego speed. A CNN-GRU predicts a steering command every 0.1 seconds. A simple proportional speed controller handles acceleration to a fixed 20 km/h target. No LiDAR, lane coordinates, route waypoints, or expert policy outputs enter the student at inference time.
 
 ```text
 front camera + speed -> CNN-GRU -> steering -> MetaDrive vehicle
@@ -87,6 +87,6 @@ Training and data-preparation commands, including the expert/DAgger boundary, ar
 
 ## Author
 
-Eric Liu · UBC MEng Mechatronics · BASc Manufacturing Engineering
+Siran Liu · UBC MEng Mechatronics · BASc Manufacturing Engineering
 
-*Independent project. Not affiliated with Tesla or any autonomous-driving company.*
+*Independent project. Not affiliated with any company.*
