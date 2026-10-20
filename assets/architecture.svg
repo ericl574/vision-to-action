@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="440" viewBox="0 0 1100 440" role="img" aria-labelledby="title desc">
+<title id="title">Vision-to-Action CARLA driving architecture</title>
+<desc id="desc">Three camera frames feed a ResNet-34 and GRU, joined by ego-speed features and a navigation command at a driving head. Outputs are steering and desired speed, with a speed controller translating desired speed into throttle and brake. Auxiliary perception heads are training-only.</desc>
+<rect width="1100" height="440" rx="18" fill="#ffffff"/>
+<defs><marker id="arrow" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0 0 L9 4.5 L0 9 Z" fill="#526577"/></marker><style>text{font-family:Arial,Helvetica,sans-serif;fill:#192b3b} .head{font-size:18px;font-weight:700} .sub{font-size:13px;fill:#566779} .box{fill:#f7f9fc;stroke:#cbd5e1;stroke-width:1.5} .mid{fill:#eaf2ff;stroke:#8bb5ef;stroke-width:1.5} .out{fill:#eff9f2;stroke:#9ad5ae;stroke-width:1.5} .line{fill:none;stroke:#526577;stroke-width:2;marker-end:url(#arrow)} .dash{fill:none;stroke:#718096;stroke-width:1.8;stroke-dasharray:6 5;marker-end:url(#arrow)}</style></defs>
+<text x="32" y="37" font-size="23" font-weight="700">Vision-to-Action · CARLA policy</text>
+<text x="32" y="61" class="sub">Visual history + ego speed + route command → learned driving actions</text>
+<rect class="box" x="30" y="96" width="197" height="82" rx="11"/><text class="head" x="128" y="126" text-anchor="middle">Front camera</text><text class="sub" x="128" y="148" text-anchor="middle">3 RGB frames · 512×288</text><text class="sub" x="128" y="165" text-anchor="middle">spanning ~0.6 s</text>
+<rect class="mid" x="274" y="96" width="158" height="82" rx="11"/><text class="head" x="353" y="132" text-anchor="middle">ResNet-34</text><text class="sub" x="353" y="151" text-anchor="middle">visual encoder</text>
+<rect class="mid" x="476" y="96" width="145" height="82" rx="11"/><text class="head" x="548" y="132" text-anchor="middle">GRU</text><text class="sub" x="548" y="151" text-anchor="middle">temporal features</text>
+<rect class="mid" x="710" y="96" width="185" height="82" rx="11"/><text class="head" x="802" y="126" text-anchor="middle">Driving head</text><text class="sub" x="802" y="147" text-anchor="middle">4 route-command</text><text class="sub" x="802" y="164" text-anchor="middle">branches</text>
+<path class="line" d="M227 137 H274"/><path class="line" d="M432 137 H476"/><path class="line" d="M621 137 H710"/>
+<rect class="box" x="476" y="230" width="145" height="63" rx="11"/><text x="548" y="256" class="head" text-anchor="middle">Ego speed</text><text x="548" y="275" class="sub" text-anchor="middle">speed MLP</text>
+<rect class="box" x="675" y="230" width="220" height="63" rx="11"/><text class="head" x="785" y="253" text-anchor="middle">Navigation command</text><text class="sub" x="785" y="274" text-anchor="middle">follow / left / right / straight</text>
+<path class="line" d="M621 261 H645 V195 H768 V178"/><path class="line" d="M785 230 V178"/>
+<rect class="out" x="946" y="87" width="136" height="66" rx="11"/><text class="head" x="1014" y="112" text-anchor="middle">Steering</text><text class="sub" x="1014" y="134" text-anchor="middle">direct output</text>
+<rect class="out" x="946" y="190" width="136" height="78" rx="11"/><text class="head" x="1014" y="217" text-anchor="middle">Target speed</text><text class="sub" x="1014" y="239" text-anchor="middle">→ throttle / brake</text><text class="sub" x="1014" y="254" text-anchor="middle">speed controller</text>
+<path class="line" d="M895 118 H946"/><path class="line" d="M895 157 H917 V229 H946"/>
+<rect class="box" x="276" y="336" width="353" height="65" rx="11"/><text class="head" x="452" y="360" text-anchor="middle">Auxiliary prediction heads</text><text class="sub" x="452" y="381" text-anchor="middle">traffic-light class · hazard · hazard distance</text>
+<path class="dash" d="M548 178 V336"/><text x="569" y="320" class="sub">training signal only</text>
+<text x="734" y="368" font-size="15" font-weight="700">Closed-loop CARLA driving</text><text x="734" y="389" class="sub">The student does not see privileged simulator state.</text>
+</svg>
