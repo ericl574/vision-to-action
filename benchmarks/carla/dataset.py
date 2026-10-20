@@ -61,11 +61,15 @@ def build_samples(roots, history: int = 3, stride: int = 3, val_frac: float = 0.
         n_val = max(1, round(len(shuffled) * val_frac))
         val_ids = set(shuffled[:n_val])
         train_ids = set(shuffled[n_val:])
+    # Re-drives of a validation route (new traffic seed, DAgger) stay in validation, so the same
+    # road geometry never appears on both sides of the split.
+    in_val = lambda r: r["route_id"] in val_ids or r.get("source_route_id") in val_ids  # noqa: E731
     train_rows, val_rows = [], []
     for route in routes:
         samples = route_samples(route["dir"], history, stride, frame_step)
-        (val_rows if route["route_id"] in val_ids else train_rows).extend(samples)
-    split = {"train": sorted(train_ids), "val": sorted(val_ids)}
+        (val_rows if in_val(route) else train_rows).extend(samples)
+    split = {"train": sorted(r["route_id"] for r in routes if not in_val(r)),
+             "val": sorted(val_ids)}
     return train_rows, val_rows, split
 
 

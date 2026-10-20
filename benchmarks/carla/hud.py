@@ -48,14 +48,14 @@ def _bar(img, x, y, w, h, frac, color):
         cv2.rectangle(img, (x + 1, y + 1), (x + 1 + fill, y + h - 1), color, -1)
 
 
-def decision_caption(target_mps: float, speed_mps: float, tl_probs, hazard_prob: float) -> str:
-    """Plain-language caption derived only from network outputs."""
+def decision_caption(target_mps: float, speed_mps: float, tl_probs, hazard_prob: float, source: str = "network sees") -> str:
+    """Plain-language caption derived only from the panel's own values (network outputs, or labels on expert runs)."""
     tl = int(np.argmax(tl_probs)) if tl_probs is not None else 0
     if target_mps < 0.5:
         if tl == 3 and tl_probs[3] > 0.5:
-            return "STOPPING: network sees red light"
+            return f"STOPPING: {source} red light"
         if hazard_prob > 0.5:
-            return "STOPPING: network sees hazard ahead"
+            return f"STOPPING: {source} hazard ahead"
         return "STOPPING"
     if target_mps < speed_mps - 1.0:
         return "SLOWING: desired %.0f km/h" % (target_mps * 3.6)
@@ -130,7 +130,7 @@ def render_frame(rgb: np.ndarray, out: dict, name: str = "PILOT", ground_truth: 
     # Decision caption
     x = 820
     _text(canvas, "DECISION", (x, y0 + 22), 0.5, DIM)
-    caption = decision_caption(target, speed, tl_probs, hazard_prob)
+    caption = decision_caption(target, speed, tl_probs, hazard_prob, "label:" if ground_truth else "network sees")
     words = caption.split(": ")
     color = BAD if caption.startswith("STOPPING") else (WARN if caption.startswith("SLOWING") else GOOD)
     _text(canvas, words[0], (x, y0 + 60), 0.75, color, 2)
