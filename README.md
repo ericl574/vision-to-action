@@ -1,102 +1,78 @@
 # Vision-to-Action
 
-Camera-based imitation learning for closed-loop driving, first in MetaDrive and now in CARLA. This is an independent research and portfolio project, not a production self-driving system or an official leaderboard entry.
+**Camera-based autonomous driving | Imitation learning · ResNet-34 + GRU · DAgger · CARLA**
 
-## CARLA: end-to-end camera driving with traffic lights, turns and pedestrians
+An independent research project exploring how a neural network can **learn to steer and control vehicle speed from camera observations**, then improve through feedback on its own driving mistakes. Built an end-to-end data collection, training, closed-loop evaluation, and visualization pipeline in CARLA.
 
-A network trained here drives a car through CARLA's Town10HD from **front-camera frames, its own speed and a sat-nav-style turn command only**. It outputs steering and desired speed directly; no hand-written traffic-light or pedestrian rules exist in the control path. Teacher: CARLA's privileged `BehaviorAgent`. Training: behaviour cloning, then DAgger.
+**[▶ Watch the 78-second driving demo](benchmarks/carla/demo/pilot_v2_heldout_reel.mp4)** · **[Full benchmark](benchmarks/carla/README.md)** · **[Model weights](benchmarks/carla/weights/pilot_v2_best_fp16.pt)**
 
-On a 15-route held-out test under a strict rule (arrive, no collision, no off-road, **no red-light violation**), the best camera-only model (pilot v2) completed **10/15** routes cleanly with **zero red-light violations**. The privileged expert scored 11/15 under the same rule. Behaviour cloning alone scored 5/15.
+> **Key result — 2× clean route success:** DAgger improved held-out CARLA route completion from **5/15 (33.3%)** with behavior cloning to **10/15 (66.7%)**. These are limited, simulator-only results—not an official CARLA Leaderboard score.
 
-[Watch the held-out demo reel](benchmarks/carla/demo/pilot_v2_heldout_reel.mp4) · [Full method, results and limitations](benchmarks/carla/README.md)
+## Demo and results
 
-## MetaDrive (earlier experiment)
+The [demo reel](benchmarks/carla/demo/pilot_v2_heldout_reel.mp4) shows **three selected successful held-out routes**, with driving telemetry and model predictions overlaid. It illustrates what the model can do, but is not a representative sample of every run.
 
-[Watch a v3 held-out route (seed 8013)](benchmarks/metadrive/demo/action_v3_final_test_seed_8013.mp4) · [Second v3 route (seed 8018)](benchmarks/metadrive/demo/action_v3_final_test_seed_8018.mp4) · [Earlier v2 highlights](benchmarks/metadrive/demo/action_v2_highlights.mp4)
+| Policy | Clean successes (15 routes) | Mean route completion | Collisions | Red-light violations |
+| --- | ---: | ---: | ---: | ---: |
+| Behavior cloning (v1) | 5/15 (33.3%) | 59.4% | 27% | 0 |
+| **Behavior cloning + DAgger (v2)** | **10/15 (66.7%)** | **81.9%** | **13%** | **0** |
+| Additional DAgger (v3) | 8/15 (53.3%) | 80.9% | 13% | 0 |
+| Privileged CARLA expert | 11/15 (73.3%) | 96.3% | 7% | 3 |
 
-## What the Learner model actually does
+**Evaluation:** Fifteen held-out Town10HD routes, approximately 300–800 m each. A clean success requires arrival at ≥95% route completion, **no collision, no road departure, no route deviation, and no red-light violation**. The traffic-light metric is a custom stop-zone check, not the official CARLA infraction system. Zero observed red-light violations on this small test does **not** establish traffic-light safety. The expert uses privileged simulator information; the learned model does not.
 
-The Learning Model receives four RGB frames, spaced 0.5 seconds apart, and ego speed. A CNN-GRU predicts a steering command every 0.1 seconds. A simple proportional speed controller handles acceleration to a fixed 20 km/h target. No LiDAR, lane coordinates, route waypoints, or expert policy outputs enter the student at inference time.
+**[Inspect per-route results →](benchmarks/carla/results/pilot_v2_test_town10.csv)** · **[Read evaluation method and failure analysis →](benchmarks/carla/README.md)**
 
-```text
-front camera + speed -> CNN-GRU -> steering -> MetaDrive vehicle
-                                 speed servo -> acceleration/brake
-```
+## Architecture: from pixels to driving actions
 
-Training uses MetaDrive's privileged PPO expert as a *teacher*. The expert provides action labels during demonstration collection and DAgger-style mixed-policy rollouts. It is not called by the benchmark policy. An earlier comma1M real-camera trajectory model is retained as a domain-shift experiment; its poor closed-loop performance motivated simulator-specific training.
+![Vision-to-Action Architecture](assets/architecture.svg)
 
-## Measured results
+- **Visual and temporal perception:** Three 512 × 288 RGB frames sampled over ~0.6 seconds pass through an ImageNet-pretrained **ResNet-34** and a **GRU**.
+- **Route-conditioned control:** Four navigation-conditioned output branches predict **steering** and **desired speed**, using vehicle speed as an additional input. A proportional controller translates target speed to throttle/brake.
+- **Auxiliary supervision:** The network also learns traffic-light classification, hazard presence, and hazard distance. These predictions are **training and diagnostic outputs, not hand-coded inputs to control**.
+- **Inference boundary:** The student receives only front-camera images, ego speed, and a high-level navigation command—not ground-truth vehicle positions, traffic-light states, or expert actions. Route planning happens outside the student model.
 
-All rows use MetaDrive 0.4.3, 3-block generated roads, traffic density 0.05, fixed seed ranges, and a 20 km/h speed target. A clean success requires arrival, at least 95% route completion, no collision, and no road departure. The stricter definition excludes a MetaDrive edge case that reports arrival at a colliding spawn.
+**Code:** [`model.py`](benchmarks/carla/model.py) · [`train.py`](benchmarks/carla/train.py) · [`run.py`](benchmarks/carla/run.py)
 
-| Split / horizon | Policy | Clean successes | Mean route completion |
-| --- | --- | ---: | ---: |
-| Development, seeds 5010–5029 / 600 steps | [Zero steering](benchmarks/metadrive/results_zero_development_20.csv) | 0/20 | 0.417 |
-| Development, seeds 5010–5029 / 600 steps | [Direct behavior cloning](benchmarks/metadrive/results_action_v1_development_20.csv) | 1/20 | 0.360 |
-| Development, seeds 5010–5029 / 600 steps | [Behavior cloning + DAgger](benchmarks/metadrive/results_action_v2_dagger_development_20.csv) | 4/20 | 0.437 |
-| Development, seeds 5010–5029 / 1,000 steps | [v2 DAgger](benchmarks/metadrive/results_action_v2_dagger_development_20_h1000.csv) | 4/20 | 0.437 |
-| Development, seeds 5010–5029 / 1,000 steps | [v3 DAgger](benchmarks/metadrive/results_action_v3_dagger_development_20_h1000.csv) | 7/20 | 0.615 |
-| First untouched test, seeds 6000–6019 / 600 steps | [Zero steering](benchmarks/metadrive/results_zero_final_test_20.csv) | 0/20 | 0.304 |
-| First untouched test, seeds 6000–6019 / 600 steps | [Behavior cloning + DAgger](benchmarks/metadrive/results_action_v2_final_test_20.csv) | 0/20 | 0.412 |
-| Separate untouched test, seeds 7000–7019 / 1,000 steps | [Zero steering](benchmarks/metadrive/results_zero_secondary_test_20_h1000.csv) | 2/20 | 0.353 |
-| Separate untouched test, seeds 7000–7019 / 1,000 steps | [Behavior cloning + DAgger](benchmarks/metadrive/results_action_v2_secondary_test_20_h1000.csv) | 2/20 | 0.335 |
-| Final held-out test, seeds 8000–8019 / 1,000 steps | [Zero steering](benchmarks/metadrive/results_zero_final_test_20_h1000.csv) | 1/20 | 0.295 |
-| Final held-out test, seeds 8000–8019 / 1,000 steps | [Selected v3 DAgger model](benchmarks/metadrive/results_action_v3_final_test_20_h1000.csv) | 3/20 | 0.545 |
+## Learning from mistakes
 
-The selected checkpoint is [`action_v3_dagger_best.pt`](benchmarks/metadrive/weights/action_v3_dagger_best.pt); the earlier v2 checkpoint and videos remain available. On the matched development set, v3 improved clean completion (7/20 vs. v2's 4/20), mean route completion (0.615 vs. 0.437), and road-departure rate (60% vs. 80%), but had 2 collisions versus none. On fresh seeds 8000–8019, v3 achieved 3/20 clean completions versus 1/20 for zero steering, with mean route completion 0.545 vs. 0.295, road departures 80% vs. 95%, and collisions 10% for both. Neither policy timed out in that test. These results show a measurable but modest improvement, not robust driving.
+1. **Collect demonstrations:** Record driving labels from CARLA's privileged `BehaviorAgent` across training routes with vehicles, pedestrians, and different weather. The expert also uses a ground-truth-based hazard-braking adjustment during data collection.
+2. **Behavior cloning:** Train a vision policy to imitate steering and desired speed. Split train/validation samples **by route**, not by nearby frames, to limit leakage.
+3. **DAgger:** Let the student encounter the states caused by its own driving decisions while the expert labels corrective actions. Oversample turning, braking, and restarting moments rather than only easy straight-road frames.
+4. **Closed-loop evaluation:** Test each policy driving the simulator—not just predicting actions on recorded images—and log route completion, collisions, deviations, and traffic violations.
 
-The two v3 videos above are successful routes selected from the full 20-seed final test: seed **8013** completed 98.8% of its route over 392.5 m; seed **8018** completed 99.2% over 530.3 m. They illustrate successful cases and should be read alongside the full test table, not as a typical-run or 100% success claim. The earlier v2 videos are retained as historical artifacts.
+**What the experiments taught:** The first DAgger round doubled clean successes on the held-out set. But more training was not automatically better: v3 fell to **8/15** on test, and v4 reached **6/10** on development routes (no v4 held-out test). A 10-route development set was not sufficient for reliable model selection.
 
-The fixed-seed CSV/JSON files and a strict-success summarizer are under [`benchmarks/metadrive/`](benchmarks/metadrive/). This is a custom reproducible benchmark, not a MetaDrive leaderboard score.
+**Code:** [`collect.py`](benchmarks/carla/collect.py) · [`dataset.py`](benchmarks/carla/dataset.py) · [`metrics.py`](benchmarks/carla/metrics.py)
 
-## Reproduce
+## Research path
 
-The project has been run on an Apple Silicon Mac with Python 3.11, PyTorch with MPS, and MetaDrive 0.4.3. Run commands from the repository root. The compact v2 and v3 direct-action checkpoints are included; raw expert data and training checkpoints are excluded.
+| Environment | Engineering question | Evidence |
+| --- | --- | --- |
+| **comma1M driving video** | Can real-camera data support useful trajectory prediction? | [`prepare_comma1m.py`](prepare_comma1m.py), [`train_comma1m_v2.py`](train_comma1m_v2.py) |
+| **MetaDrive** | Can a camera-based policy learn closed-loop steering, and where does it fail? | [MetaDrive results and demos](benchmarks/metadrive/README.md) |
+| **CARLA** | Can temporal vision learn steering and speed control through intersections and traffic? | [CARLA methods and benchmarks](benchmarks/carla/README.md) |
 
-```bash
-# Install the simulator and inference dependencies in a fresh environment.
-conda create -n vision-to-action python=3.11 -y
-conda activate vision-to-action
-python -m pip install -r requirements-metadrive.txt
+These are **different experiments with different metrics**; their success rates are not directly comparable.
 
-# Verify coordinate-frame, timing, speed-unit, and success-rule checks.
-python -m unittest benchmarks.metadrive.test_pipeline -v
+## Reproduce / explore
 
-# Run the packaged camera model and a matched zero-steer baseline.
-python benchmarks/metadrive/run.py --policy action \
-  --checkpoint benchmarks/metadrive/weights/action_v3_dagger_best.pt \
-  --seed 8000 --episodes 20 --max-steps 1000 \
-  --output benchmarks/metadrive/reproduction_action.csv
-python benchmarks/metadrive/run.py --policy zero \
-  --seed 8000 --episodes 20 --max-steps 1000 \
-  --output benchmarks/metadrive/reproduction_zero.csv
-python benchmarks/metadrive/summarize_results.py \
-  benchmarks/metadrive/reproduction_action.csv benchmarks/metadrive/reproduction_zero.csv
-```
+The repository includes source code, test-route specifications, the best CARLA policy weights, per-route CSV/JSON results, unit tests, and the demo reel. Full raw training frames are not checked in.
 
-Recording uses the same model input resolution; a larger camera buffer can make the output video clearer without giving the model additional pixels:
+- **[CARLA setup, expert collection, training, DAgger and evaluation](benchmarks/carla/README.md)**
+- **[MetaDrive setup, experiments and reproducible tests](benchmarks/metadrive/README.md)**
+- **[Best CARLA checkpoint](benchmarks/carla/weights/pilot_v2_best_fp16.pt)**
+- **[Evaluation outputs](benchmarks/carla/results/)**
 
-```bash
-python benchmarks/metadrive/run.py --policy action \
-  --checkpoint benchmarks/metadrive/weights/action_v3_dagger_best.pt \
-  --seed 8013 --episodes 1 --max-steps 1000 \
-  --camera-width 384 --camera-height 240 \
-  --record benchmarks/metadrive/demo/reproduced_seed_8013.mp4
-```
+**Stack:** Python · PyTorch · torchvision · ResNet-34 · GRU · CUDA · CARLA · MetaDrive · OpenCV · Git
 
-On macOS with MetaDrive 0.4.3, RGB evaluation and recording require a logged-in desktop session for Panda3D's offscreen window; a physics-only headless session is not sufficient.
+## Current limits and next research directions
 
-Training and data-preparation commands, including the expert/DAgger boundary, are documented in [`benchmarks/metadrive/README.md`](benchmarks/metadrive/README.md). The real-data trajectory experiment remains in `prepare_comma1m.py`, `train_comma1m.py`, and `train_comma1m_v2.py`.
+This is an early-stage **simulation prototype**, not a safe or deployable autonomous-driving system. The CARLA study covers one town and a small held-out sample. The model still collides, misses route branches, and leaves the road; reliable pedestrian yielding and transfer to unseen towns are unverified.
 
-## Limitations and next research questions
+Next priorities: **unseen-town evaluation**, larger held-out route sets, targeted collection of safety-critical and recovery cases, stronger temporal modeling, and comparisons on established autonomous-driving benchmarks.
 
-- A small steering error compounds over time; several roads still end off-road. Open-loop steering accuracy alone did not predict driving success.
-- The student has no navigation command, so some intersections or route choices may be ambiguous from camera and speed alone.
-- The speed controller is hand-designed. This project does not claim fully learned longitudinal control, real-world transfer, operation in arbitrary simulators, or safety readiness.
-- A stronger result would require more diverse corrective data, route-conditioned planning, and a larger untouched benchmark.
+---
 
-## Author
-
-Siran Liu · UBC MEng Mechatronics · BASc Manufacturing Engineering
-
-*Independent project. Not affiliated with any company.*
+**Siran Liu** · UBC MEng Mechatronics · BASc Manufacturing Engineering  
+*Independent project; not affiliated with any company.*
