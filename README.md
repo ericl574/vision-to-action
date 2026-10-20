@@ -1,6 +1,16 @@
 # Vision-to-Action
 
-Camera-based imitation learning for closed-loop driving in MetaDrive. This is an independent research and portfolio project, not a production self-driving system or an official leaderboard entry.
+Camera-based imitation learning for closed-loop driving, first in MetaDrive and now in CARLA. This is an independent research and portfolio project, not a production self-driving system or an official leaderboard entry.
+
+## CARLA: end-to-end camera driving with traffic lights, turns and pedestrians
+
+A network trained here drives a car through CARLA's Town10HD from **front-camera frames, its own speed and a sat-nav-style turn command only**. It outputs steering and desired speed directly; no hand-written traffic-light or pedestrian rules exist in the control path. Teacher: CARLA's privileged `BehaviorAgent`. Training: behaviour cloning, then DAgger.
+
+On a 15-route held-out test under a strict rule (arrive, no collision, no off-road, **no red-light violation**), the best camera-only model (pilot v2) completed **10/15** routes cleanly with **zero red-light violations**. The privileged expert scored 11/15 under the same rule. Behaviour cloning alone scored 5/15.
+
+[Watch the held-out demo reel](benchmarks/carla/demo/pilot_v2_heldout_reel.mp4) · [Full method, results and limitations](benchmarks/carla/README.md)
+
+## MetaDrive (earlier experiment)
 
 [Watch a v3 held-out route (seed 8013)](benchmarks/metadrive/demo/action_v3_final_test_seed_8013.mp4) · [Second v3 route (seed 8018)](benchmarks/metadrive/demo/action_v3_final_test_seed_8018.mp4) · [Earlier v2 highlights](benchmarks/metadrive/demo/action_v2_highlights.mp4)
 
