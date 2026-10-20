@@ -149,7 +149,7 @@ def main():
                 env.close()
             except Exception:  # noqa: BLE001
                 pass
-        kill_server(proc)
+        kill_server(proc, args.port if proc is not None else None)
 
 
 if __name__ == "__main__":

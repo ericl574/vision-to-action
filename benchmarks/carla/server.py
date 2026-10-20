@@ -48,14 +48,17 @@ def wait_for_server(host: str = "127.0.0.1", port: int = 2000, timeout: float = 
     raise TimeoutError(f"CARLA server on {host}:{port} did not answer within {timeout}s: {last_error}")
 
 
-def kill_server(proc: subprocess.Popen | None) -> None:
-    if proc is None or proc.poll() is not None:
-        return
-    try:
-        os.killpg(os.getpgid(proc.pid), signal.SIGTERM)
-        proc.wait(timeout=15)
-    except Exception:  # noqa: BLE001
+def kill_server(proc: subprocess.Popen | None, port: int | None = None) -> None:
+    """Stop a server we launched. ``runuser`` puts the Unreal binary in its own session, so killing
+    our process group is not enough; the binary is also matched by its RPC port."""
+    if proc is not None and proc.poll() is None:
         try:
-            os.killpg(os.getpgid(proc.pid), signal.SIGKILL)
+            os.killpg(os.getpgid(proc.pid), signal.SIGTERM)
+            proc.wait(timeout=15)
         except Exception:  # noqa: BLE001
-            pass
+            try:
+                os.killpg(os.getpgid(proc.pid), signal.SIGKILL)
+            except Exception:  # noqa: BLE001
+                pass
+    if port is not None and shutil.which("pkill"):
+        subprocess.run(["pkill", "-KILL", "-f", f"CarlaUE4-Linux-Shipping.*-carla-rpc-port={port} "], check=False)

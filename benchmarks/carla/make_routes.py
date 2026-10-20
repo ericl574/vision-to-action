@@ -71,7 +71,7 @@ def main():
               f"{attempts} attempts, {n_points} spawn points)")
         env.close()
     finally:
-        kill_server(proc)
+        kill_server(proc, args.port if proc is not None else None)
 
 
 if __name__ == "__main__":
