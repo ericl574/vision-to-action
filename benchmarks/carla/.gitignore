@@ -1,0 +1,12 @@
+# Raw frames, logs and large run outputs stay on the box; only curated results/weights/videos are tracked.
+__pycache__/
+*.log
+*.tmp.mp4
+demo/*.mp4
+!demo/pilot_*_reel.mp4
+results/*.csv
+results/*.json
+!results/expert_*.csv
+!results/expert_*.json
+!results/pilot_v*_*.csv
+!results/pilot_v*_*.json

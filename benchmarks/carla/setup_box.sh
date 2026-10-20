@@ -14,6 +14,10 @@ CARLA_ROOT="$WORK/carla"
 TARBALL="$WORK/CARLA_${CARLA_VERSION}.tar.gz"
 TARBALL_URL="https://downloads.carlasim.com/Linux/CARLA_${CARLA_VERSION}.tar.gz"
 REPO=$(cd "$(dirname "$0")/../.." && pwd)
+# Vast images keep the PyTorch install in /venv/main; fall back to the system interpreter elsewhere.
+if [ -z "${PYTHON:-}" ]; then
+  if [ -x /venv/main/bin/python ]; then PYTHON=/venv/main/bin/python; else PYTHON=python3; fi
+fi
 export DEBIAN_FRONTEND=noninteractive
 
 echo "== [1/5] GPU"
@@ -45,9 +49,9 @@ fi
 echo "Vulkan OK: $(vulkaninfo --summary 2>/dev/null | grep -i deviceName | head -1 | xargs)"
 
 echo "== [4/5] Python packages"
-python3 -m pip install -q --upgrade pip
-python3 -m pip install -q -r "$REPO/benchmarks/carla/requirements-carla.txt"
-python3 -c "import carla, torch; print('carla', carla.__file__.split('/')[-2], '| torch', torch.__version__, '| cuda', torch.cuda.is_available())"
+"$PYTHON" -m pip install -q --upgrade pip
+"$PYTHON" -m pip install -q -r "$REPO/benchmarks/carla/requirements-carla.txt"
+"$PYTHON" -c "import carla, torch; print('python', __import__('sys').version.split()[0], '| torch', torch.__version__, '| cuda', torch.cuda.is_available())"
 
 echo "== [5/5] CARLA ${CARLA_VERSION} server package"
 if [ ! -x "$CARLA_ROOT/CarlaUE4.sh" ]; then
@@ -65,6 +69,7 @@ mkdir -p "$WORK/data" "$WORK/logs" "$WORK/runs"
 chmod 777 "$WORK/data" "$WORK/logs" "$WORK/runs"
 
 cat > "$WORK/carla_env.sh" <<EOF
+[ -f /venv/main/bin/activate ] && source /venv/main/bin/activate
 export CARLA_ROOT=$CARLA_ROOT
 export PYTHONPATH=$CARLA_ROOT/PythonAPI/carla:$REPO:\${PYTHONPATH:-}
 export CARLA_WORK=$WORK
@@ -72,4 +77,4 @@ EOF
 echo
 echo "Setup complete. Next:"
 echo "  source $WORK/carla_env.sh"
-echo "  python3 $REPO/benchmarks/carla/carla_smoke.py --out $WORK/smoke_camera.png"
+echo "  python $REPO/benchmarks/carla/carla_smoke.py --out $WORK/smoke_camera.png"
