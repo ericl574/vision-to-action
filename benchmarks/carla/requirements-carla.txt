@@ -1,0 +1,10 @@
+# Runtime dependencies for the CARLA end-to-end benchmark (box side).
+# torch/torchvision come from the Vast PyTorch image; pinned here only as floors.
+carla==0.9.16
+torch>=2.2
+torchvision>=0.17
+numpy>=1.24
+opencv-python-headless>=4.8
+networkx>=3.0
+shapely>=2.0
+pillow>=10.0
