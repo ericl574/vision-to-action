@@ -226,7 +226,86 @@ class ModelTests(unittest.TestCase):
         self.assertEqual([int(f[0, 0, 0]) for f in history.stack()], [1, 3, 5])
 
 
+class FakeEnv:
+    """Scripted stand-in for CarlaEnv: drives straight at 5 m/s, optional events by step."""
+
+    fixed_dt = 0.1
+
+    def __init__(self, events=None, route_length=200.0):
+        self.events = events or {}
+        self.route_length = route_length
+        self.tracker = type("T", (), {"length_m": route_length})()
+        self.step_i = 0
+
+    def _info(self):
+        x = self.step_i * 0.5
+        info = {"x": x, "y": 0.0, "yaw": 0.0, "speed_mps": 5.0, "tl_state": 0, "hazard": 0, "collision_type": None,
+                "collision_other": "", "off_road": False, "deviated": False, "arrived": x >= self.route_length - 6,
+                "route_completion": min(1.0, x / self.route_length), "red_light_violations": 0, "t": self.step_i * 0.1}
+        info.update(self.events.get(self.step_i, {}))
+        return info
+
+    def reset(self, spec):
+        self.step_i = 0
+        return {"rgb": np.zeros((4, 8, 3), np.uint8), "speed_mps": 0.0, "command": 0}, self._info()
+
+    def step(self, steer, throttle, brake):
+        self.step_i += 1
+        return {"rgb": np.zeros((4, 8, 3), np.uint8), "speed_mps": 5.0, "command": 0}, self._info()
+
+
+class EpisodeTests(unittest.TestCase):
+    def test_arrival_is_a_success_and_distance_is_integrated(self):
+        from benchmarks.carla.episode import run_episode
+
+        spec = RouteSpec("Town10HD_Opt", "r", 0, 1)
+        result = run_episode(FakeEnv(), spec, lambda obs, info, step: (0.0, 0.5, 0.0, None), max_steps=1000)
+        self.assertEqual(result["status"], "arrived")
+        self.assertTrue(result["success"])
+        self.assertAlmostEqual(result["distance_m"], result["steps"] * 0.5, places=1)
+
+    def test_collision_ends_the_route_and_red_light_breaks_success(self):
+        from benchmarks.carla.episode import run_episode
+
+        spec = RouteSpec("Town10HD_Opt", "r", 0, 1)
+        env = FakeEnv(events={20: {"collision_type": "walker", "collision_other": "walker.pedestrian.0001"}})
+        result = run_episode(env, spec, lambda obs, info, step: (0.0, 0.5, 0.0, None), max_steps=1000)
+        self.assertEqual((result["status"], result["collision_type"], result["steps"]), ("collision", "walker", 20))
+        env = FakeEnv(events={i: {"red_light_violations": 1} for i in range(30, 1000)})
+        result = run_episode(env, spec, lambda obs, info, step: (0.0, 0.5, 0.0, None), max_steps=1000)
+        self.assertEqual(result["status"], "arrived")
+        self.assertFalse(result["success"])
+
+    def test_on_step_sees_pre_control_state(self):
+        from benchmarks.carla.episode import run_episode
+
+        seen = []
+        run_episode(FakeEnv(route_length=20), RouteSpec("T", "r", 0, 1),
+                    lambda obs, info, step: (0.0, 0.0, 0.0, {"k": step}),
+                    max_steps=10, on_step=lambda obs, info, step, control, extra: seen.append((step, info["x"], extra["k"])))
+        self.assertEqual(seen[0], (0, 0.0, 0))
+        self.assertEqual(seen[1], (1, 0.5, 1))
+
+
 class HudTests(unittest.TestCase):
+    def test_render_video_from_logged_outputs(self):
+        from benchmarks.carla import hud
+        from benchmarks.carla.record import OUTPUT_COLUMNS
+
+        with tempfile.TemporaryDirectory() as tmp:
+            recorder = RouteRecorder(tmp, "clip", {}, columns=OUTPUT_COLUMNS, csv_name="outputs.csv")
+            for i in range(5):
+                recorder.append(np.random.randint(0, 255, (72, 128, 3), dtype=np.uint8), {
+                    "t": i / 10, "speed_mps": 4.0, "command": 2, "steer": 0.1, "throttle": 0.3, "brake": 0.0,
+                    "target_speed_mps": 6.0, "tl_none": 0.9, "tl_green": 0.05, "tl_yellow": 0.03, "tl_red": 0.02,
+                    "hazard_prob": 0.1, "hazard_dist_m": 0.0})
+            recorder.finish("arrived")
+            out = hud.render_video(Path(tmp) / "clip", Path(tmp) / "clip.mp4", fps=10)
+            self.assertTrue(out.exists() and out.stat().st_size > 0)
+            rows, ground_truth = hud.load_log(Path(tmp) / "clip")
+            self.assertFalse(ground_truth)
+            self.assertEqual(len(rows), 5)
+
     def test_render_frame_shape_and_caption(self):
         from benchmarks.carla import hud
 

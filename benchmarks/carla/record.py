@@ -16,8 +16,17 @@ LABEL_COLUMNS = [
 ]
 
 
+# Per-step network outputs logged by run.py for the overlay (no privileged fields except the gt_* columns).
+OUTPUT_COLUMNS = [
+    "idx", "t", "speed_mps", "command", "steer", "throttle", "brake", "target_speed_mps",
+    "tl_none", "tl_green", "tl_yellow", "tl_red", "hazard_prob", "hazard_dist_m",
+    "gt_tl_state", "gt_hazard", "route_completion", "ran_red_light", "x", "y",
+]
+
+
 class RouteRecorder:
-    def __init__(self, root, route_id: str, meta: dict | None = None, jpeg_quality: int = 90):
+    def __init__(self, root, route_id: str, meta: dict | None = None, jpeg_quality: int = 90,
+                 columns: list[str] | None = None, csv_name: str = "labels.csv"):
         self.dir = Path(root) / route_id
         self.frames_dir = self.dir / "frames"
         self.frames_dir.mkdir(parents=True, exist_ok=True)
@@ -25,6 +34,8 @@ class RouteRecorder:
         self.meta["route_id"] = route_id
         self.rows: list[dict] = []
         self.jpeg_quality = jpeg_quality
+        self.columns = list(columns or LABEL_COLUMNS)
+        self.csv_name = csv_name
         if (self.dir / "meta.json").exists():
             (self.dir / "meta.json").unlink()
 
@@ -39,11 +50,11 @@ class RouteRecorder:
         self.rows.append(record)
 
     def finish(self, status: str, extra: dict | None = None) -> Path:
-        with open(self.dir / "labels.csv", "w", newline="") as handle:
-            writer = csv.DictWriter(handle, fieldnames=LABEL_COLUMNS, extrasaction="ignore")
+        with open(self.dir / self.csv_name, "w", newline="") as handle:
+            writer = csv.DictWriter(handle, fieldnames=self.columns, extrasaction="ignore")
             writer.writeheader()
             for row in self.rows:
-                writer.writerow({key: row.get(key, "") for key in LABEL_COLUMNS})
+                writer.writerow({key: row.get(key, "") for key in self.columns})
         self.meta.update({"status": status, "n_frames": len(self.rows)})
         if extra:
             self.meta.update(extra)
