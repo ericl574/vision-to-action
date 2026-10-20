@@ -25,6 +25,7 @@ control.
 | DAgger round 1 | v1 drives (expert executes 40 % of steps), the expert labels every visited state | 34 routes, 34,631 frames from states the student actually reaches |
 | **pilot v2** | fine-tuned from v1 on A + B + DAgger 1, 6 epochs | 68,721 training samples |
 | DAgger round 2 → pilot v3 | v2 drives (expert 20 %) on 51 routes (51,716 frames), fine-tune from v2, 5 epochs | better dev completion, worse test (see results) |
+| DAgger round 3 → pilot v4 | v3 drives (expert 20 %), fine-tune from v3, 4 epochs | no dev improvement (6/10); not run on test |
 
 The expert is privileged: it reads the simulator's traffic-light state and actor positions, and it is
 used **only** to drive during collection and to label states. `BehaviorAgent` notices crossing
@@ -65,6 +66,7 @@ rule.
 | pilot v1 (behaviour cloning) | 4/10 | 0.564 | 30% | 2 (0.77/km) | 30% | 0% |
 | pilot v2 (+ DAgger round 1) | 7/10 | 0.719 | 10% | 0 (0.00/km) | 20% | 0% |
 | pilot v3 (+ DAgger round 2) | 7/10 | 0.818 | 20% | 1 (0.29/km) | 0% | 0% |
+| pilot v4 (+ DAgger round 3) | 6/10 | 0.728 | 30% | 1 (0.32/km) | 10% | 0% |
 
 What the numbers say, and what they don't:
 
