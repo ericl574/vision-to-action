@@ -1,0 +1,11 @@
+status,route_completion,collision_type,red_light_violations,success,route_id,town,weather,route_length_m,distance_m,steps,sim_seconds,wall_seconds,collision_other
+collision,0.36341581765187264,vehicle,0,False,dev_town10_000,Town10HD_Opt,ClearNoon,436.8,157.8,511,51.1,21.0,vehicle.volkswagen.t2_2021
+arrived,0.9697823230546503,,0,True,dev_town10_001,Town10HD_Opt,CloudyNoon,369.7,357.0,732,73.2,46.1,
+arrived,0.9706235414001806,,0,True,dev_town10_002,Town10HD_Opt,WetNoon,340.4,322.9,578,57.8,38.3,
+off_road,0.7857629226880136,,1,False,dev_town10_003,Town10HD_Opt,SoftRainSunset,388.0,298.3,1007,100.7,72.7,
+arrived,0.9732566479647803,,0,True,dev_town10_004,Town10HD_Opt,ClearNoon,448.7,433.8,1378,137.8,84.0,
+arrived,0.9780578684877754,,0,True,dev_town10_005,Town10HD_Opt,CloudyNoon,546.9,530.4,1237,123.7,80.1,
+collision,0.18329267034380484,vehicle,0,False,dev_town10_006,Town10HD_Opt,WetNoon,362.0,64.0,610,61.0,24.4,vehicle.audi.etron
+collision,0.10091003262389368,vehicle,0,False,dev_town10_007,Town10HD_Opt,SoftRainSunset,339.0,36.0,64,6.4,2.4,vehicle.chevrolet.impala
+arrived,0.9750038287084054,,0,True,dev_town10_008,Town10HD_Opt,ClearNoon,400.1,387.5,909,90.9,61.6,
+arrived,0.9825588954192723,,0,True,dev_town10_009,Town10HD_Opt,CloudyNoon,584.8,568.0,1839,183.9,107.0,

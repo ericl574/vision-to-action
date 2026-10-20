@@ -1,0 +1,182 @@
+[
+ {
+  "town": "Town10HD_Opt",
+  "route_id": "test2_town10_000",
+  "start_idx": 30,
+  "end_idx": 57,
+  "weather": "ClearNoon",
+  "length_m": 397.4,
+  "seed": 1300000
+ },
+ {
+  "town": "Town10HD_Opt",
+  "route_id": "test2_town10_001",
+  "start_idx": 136,
+  "end_idx": 32,
+  "weather": "CloudyNoon",
+  "length_m": 333.0,
+  "seed": 1300001
+ },
+ {
+  "town": "Town10HD_Opt",
+  "route_id": "test2_town10_002",
+  "start_idx": 60,
+  "end_idx": 140,
+  "weather": "WetNoon",
+  "length_m": 326.5,
+  "seed": 1300002
+ },
+ {
+  "town": "Town10HD_Opt",
+  "route_id": "test2_town10_003",
+  "start_idx": 81,
+  "end_idx": 151,
+  "weather": "SoftRainSunset",
+  "length_m": 385.9,
+  "seed": 1300003
+ },
+ {
+  "town": "Town10HD_Opt",
+  "route_id": "test2_town10_004",
+  "start_idx": 77,
+  "end_idx": 105,
+  "weather": "ClearNoon",
+  "length_m": 345.4,
+  "seed": 1300004
+ },
+ {
+  "town": "Town10HD_Opt",
+  "route_id": "test2_town10_005",
+  "start_idx": 52,
+  "end_idx": 124,
+  "weather": "CloudyNoon",
+  "length_m": 588.0,
+  "seed": 1300005
+ },
+ {
+  "town": "Town10HD_Opt",
+  "route_id": "test2_town10_006",
+  "start_idx": 128,
+  "end_idx": 92,
+  "weather": "WetNoon",
+  "length_m": 412.4,
+  "seed": 1300006
+ },
+ {
+  "town": "Town10HD_Opt",
+  "route_id": "test2_town10_007",
+  "start_idx": 147,
+  "end_idx": 115,
+  "weather": "SoftRainSunset",
+  "length_m": 301.3,
+  "seed": 1300007
+ },
+ {
+  "town": "Town10HD_Opt",
+  "route_id": "test2_town10_008",
+  "start_idx": 30,
+  "end_idx": 43,
+  "weather": "ClearNoon",
+  "length_m": 433.1,
+  "seed": 1300008
+ },
+ {
+  "town": "Town10HD_Opt",
+  "route_id": "test2_town10_009",
+  "start_idx": 86,
+  "end_idx": 136,
+  "weather": "CloudyNoon",
+  "length_m": 407.9,
+  "seed": 1300009
+ },
+ {
+  "town": "Town10HD_Opt",
+  "route_id": "test2_town10_010",
+  "start_idx": 109,
+  "end_idx": 72,
+  "weather": "WetNoon",
+  "length_m": 482.0,
+  "seed": 1300010
+ },
+ {
+  "town": "Town10HD_Opt",
+  "route_id": "test2_town10_011",
+  "start_idx": 32,
+  "end_idx": 149,
+  "weather": "SoftRainSunset",
+  "length_m": 436.1,
+  "seed": 1300011
+ },
+ {
+  "town": "Town10HD_Opt",
+  "route_id": "test2_town10_012",
+  "start_idx": 130,
+  "end_idx": 26,
+  "weather": "ClearNoon",
+  "length_m": 392.7,
+  "seed": 1300012
+ },
+ {
+  "town": "Town10HD_Opt",
+  "route_id": "test2_town10_013",
+  "start_idx": 66,
+  "end_idx": 151,
+  "weather": "CloudyNoon",
+  "length_m": 326.9,
+  "seed": 1300013
+ },
+ {
+  "town": "Town10HD_Opt",
+  "route_id": "test2_town10_014",
+  "start_idx": 140,
+  "end_idx": 89,
+  "weather": "WetNoon",
+  "length_m": 542.7,
+  "seed": 1300014
+ },
+ {
+  "town": "Town10HD_Opt",
+  "route_id": "test2_town10_015",
+  "start_idx": 24,
+  "end_idx": 84,
+  "weather": "SoftRainSunset",
+  "length_m": 337.1,
+  "seed": 1300015
+ },
+ {
+  "town": "Town10HD_Opt",
+  "route_id": "test2_town10_016",
+  "start_idx": 66,
+  "end_idx": 55,
+  "weather": "ClearNoon",
+  "length_m": 554.1,
+  "seed": 1300016
+ },
+ {
+  "town": "Town10HD_Opt",
+  "route_id": "test2_town10_017",
+  "start_idx": 37,
+  "end_idx": 57,
+  "weather": "CloudyNoon",
+  "length_m": 346.9,
+  "seed": 1300017
+ },
+ {
+  "town": "Town10HD_Opt",
+  "route_id": "test2_town10_018",
+  "start_idx": 68,
+  "end_idx": 35,
+  "weather": "WetNoon",
+  "length_m": 387.3,
+  "seed": 1300018
+ },
+ {
+  "town": "Town10HD_Opt",
+  "route_id": "test2_town10_019",
+  "start_idx": 146,
+  "end_idx": 151,
+  "weather": "SoftRainSunset",
+  "length_m": 371.9,
+  "seed": 1300019
+ }
+]

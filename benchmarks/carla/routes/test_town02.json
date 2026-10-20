@@ -1,0 +1,92 @@
+[
+ {
+  "town": "Town02_Opt",
+  "route_id": "test_town02_000",
+  "start_idx": 55,
+  "end_idx": 19,
+  "weather": "ClearNoon",
+  "length_m": 450.4,
+  "seed": 1700000
+ },
+ {
+  "town": "Town02_Opt",
+  "route_id": "test_town02_001",
+  "start_idx": 60,
+  "end_idx": 49,
+  "weather": "CloudyNoon",
+  "length_m": 438.7,
+  "seed": 1700001
+ },
+ {
+  "town": "Town02_Opt",
+  "route_id": "test_town02_002",
+  "start_idx": 2,
+  "end_idx": 18,
+  "weather": "WetNoon",
+  "length_m": 320.1,
+  "seed": 1700002
+ },
+ {
+  "town": "Town02_Opt",
+  "route_id": "test_town02_003",
+  "start_idx": 81,
+  "end_idx": 20,
+  "weather": "SoftRainSunset",
+  "length_m": 417.7,
+  "seed": 1700003
+ },
+ {
+  "town": "Town02_Opt",
+  "route_id": "test_town02_004",
+  "start_idx": 42,
+  "end_idx": 18,
+  "weather": "ClearNoon",
+  "length_m": 463.1,
+  "seed": 1700004
+ },
+ {
+  "town": "Town02_Opt",
+  "route_id": "test_town02_005",
+  "start_idx": 78,
+  "end_idx": 19,
+  "weather": "CloudyNoon",
+  "length_m": 366.0,
+  "seed": 1700005
+ },
+ {
+  "town": "Town02_Opt",
+  "route_id": "test_town02_006",
+  "start_idx": 73,
+  "end_idx": 93,
+  "weather": "WetNoon",
+  "length_m": 323.3,
+  "seed": 1700006
+ },
+ {
+  "town": "Town02_Opt",
+  "route_id": "test_town02_007",
+  "start_idx": 33,
+  "end_idx": 48,
+  "weather": "SoftRainSunset",
+  "length_m": 300.9,
+  "seed": 1700007
+ },
+ {
+  "town": "Town02_Opt",
+  "route_id": "test_town02_008",
+  "start_idx": 80,
+  "end_idx": 22,
+  "weather": "ClearNoon",
+  "length_m": 411.5,
+  "seed": 1700008
+ },
+ {
+  "town": "Town02_Opt",
+  "route_id": "test_town02_009",
+  "start_idx": 20,
+  "end_idx": 37,
+  "weather": "CloudyNoon",
+  "length_m": 343.8,
+  "seed": 1700009
+ }
+]
