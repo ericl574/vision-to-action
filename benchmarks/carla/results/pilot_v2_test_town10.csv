@@ -1,0 +1,16 @@
+status,route_completion,collision_type,red_light_violations,success,route_id,town,weather,route_length_m,distance_m,steps,sim_seconds,wall_seconds,collision_other
+arrived,0.9833417467480676,,0,True,test_town10_000,Town10HD_Opt,ClearNoon,600.3,582.3,2056,205.6,139.6,
+arrived,0.9731106652643662,,0,True,test_town10_001,Town10HD_Opt,CloudyNoon,371.9,360.3,1035,103.5,69.4,
+route_deviation,0.03339253034525416,,0,False,test_town10_002,Town10HD_Opt,WetNoon,428.3,21.9,43,4.3,2.8,
+arrived,0.9697166391555581,,0,True,test_town10_003,Town10HD_Opt,SoftRainSunset,330.2,316.7,917,91.7,61.5,
+collision,0.7581243685703218,static,0,False,test_town10_004,Town10HD_Opt,ClearNoon,436.5,329.2,828,82.8,57.1,static.static
+collision,0.8031177671386438,vehicle,0,False,test_town10_005,Town10HD_Opt,CloudyNoon,485.6,389.5,927,92.7,63.5,vehicle.mercedes.coupe_2020
+arrived,0.9772874849141356,,0,True,test_town10_006,Town10HD_Opt,WetNoon,440.3,423.5,1158,115.8,77.6,
+off_road,0.8593785439685447,,0,False,test_town10_007,Town10HD_Opt,SoftRainSunset,318.9,268.9,419,41.9,26.1,
+arrived,0.9755647958452144,,0,True,test_town10_008,Town10HD_Opt,ClearNoon,467.5,451.3,858,85.8,59.2,
+off_road,0.08987734086377176,,0,False,test_town10_009,Town10HD_Opt,CloudyNoon,588.0,45.5,80,8.0,5.9,
+arrived,0.9636420882566581,,0,True,test_town10_010,Town10HD_Opt,WetNoon,300.1,287.5,727,72.7,49.7,
+arrived,0.9800071387454075,,0,True,test_town10_011,Town10HD_Opt,SoftRainSunset,526.6,508.9,1552,155.2,100.2,
+arrived,0.9753229932053867,,0,True,test_town10_012,Town10HD_Opt,ClearNoon,405.2,388.8,982,98.2,65.0,
+arrived,0.9783117487988626,,0,True,test_town10_013,Town10HD_Opt,CloudyNoon,461.1,444.7,982,98.2,66.8,
+arrived,0.967931702286799,,0,True,test_town10_014,Town10HD_Opt,WetNoon,360.6,347.7,860,86.0,58.6,
