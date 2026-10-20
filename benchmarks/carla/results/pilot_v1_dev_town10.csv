@@ -1,0 +1,11 @@
+status,route_completion,collision_type,red_light_violations,success,route_id,town,weather,route_length_m,distance_m,steps,sim_seconds,wall_seconds,collision_other
+arrived,0.977108593665232,,0,True,dev_town10_000,Town10HD_Opt,ClearNoon,436.8,422.7,1461,146.1,128.9,
+collision,0.5240864629619469,static,0,False,dev_town10_001,Town10HD_Opt,CloudyNoon,369.7,192.9,302,30.2,28.9,traffic.traffic_light
+route_deviation,0.21198049366577462,,0,False,dev_town10_002,Town10HD_Opt,WetNoon,340.4,74.9,121,12.1,12.9,
+off_road,0.05137621225314011,,0,False,dev_town10_003,Town10HD_Opt,SoftRainSunset,388.0,18.9,40,4.0,4.4,
+arrived,0.9732566479647803,,0,True,dev_town10_004,Town10HD_Opt,ClearNoon,448.7,433.9,1321,132.1,125.4,
+arrived,0.9780578684877754,,0,True,dev_town10_005,Town10HD_Opt,CloudyNoon,546.9,529.5,1237,123.7,117.6,
+route_deviation,0.21075517327812332,,1,False,dev_town10_006,Town10HD_Opt,WetNoon,362.0,74.1,150,15.0,14.2,
+collision,0.1068105658368704,vehicle,0,False,dev_town10_007,Town10HD_Opt,SoftRainSunset,339.0,36.5,65,6.5,6.4,vehicle.chevrolet.impala
+collision,0.6271126305192901,vehicle,1,False,dev_town10_008,Town10HD_Opt,ClearNoon,400.1,249.6,721,72.1,70.7,vehicle.bmw.grandtourer
+arrived,0.9825588954192723,,0,True,dev_town10_009,Town10HD_Opt,CloudyNoon,584.8,567.3,1845,184.5,139.7,

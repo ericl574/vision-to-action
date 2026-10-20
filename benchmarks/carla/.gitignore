@@ -10,3 +10,6 @@ results/*.json
 !results/expert_*.json
 !results/pilot_v*_*.csv
 !results/pilot_v*_*.json
+
+# Local mirror of box checkpoints (curated weights are copied to weights/ explicitly).
+runs/
