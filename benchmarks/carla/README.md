@@ -24,7 +24,7 @@ control.
 | Expert pass B | same routes (59 finished), new traffic seeds | 58,248 frames |
 | DAgger round 1 | v1 drives (expert executes 40 % of steps), the expert labels every visited state | 34 routes, 34,631 frames from states the student actually reaches |
 | **pilot v2** | fine-tuned from v1 on A + B + DAgger 1, 6 epochs | 68,721 training samples |
-| DAgger round 2 → pilot v3 | v2 drives (expert 20 %) on 51 routes (51,716 frames), fine-tune from v2 | see results |
+| DAgger round 2 → pilot v3 | v2 drives (expert 20 %) on 51 routes (51,716 frames), fine-tune from v2, 5 epochs | better dev completion, worse test (see results) |
 
 The expert is privileged: it reads the simulator's traffic-light state and actor positions, and it is
 used **only** to drive during collection and to label states. `BehaviorAgent` notices crossing
@@ -53,7 +53,9 @@ rule.
 | Policy | Success | Mean completion | Collisions | Red-light violations | Off-road / deviation | Timeout |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: |
 | Expert (privileged teacher) | 11/15 | 0.963 | 7% | 3 (0.48/km) | 0% | 0% |
-| **pilot v2 (camera only)** | **10/15** | 0.819 | 13% | **0 (0.00/km)** | 20% | 0% |
+| pilot v1 (behaviour cloning) | 5/15 | 0.594 | 27% | 0 (0.00/km) | 40% | 0% |
+| **pilot v2 (+ DAgger round 1)** | **10/15** | 0.819 | 13% | **0 (0.00/km)** | 20% | 0% |
+| pilot v3 (+ DAgger round 2) | 8/15 | 0.809 | 13% | 0 (0.00/km) | 27% | 7% |
 
 ### Dev, 10 routes (Town10HD), used for checkpoint selection
 
@@ -62,6 +64,7 @@ rule.
 | Expert (privileged teacher) | 7/10 | 0.835 | 20% | 1 (0.29/km) | 0% | 0% |
 | pilot v1 (behaviour cloning) | 4/10 | 0.564 | 30% | 2 (0.77/km) | 30% | 0% |
 | pilot v2 (+ DAgger round 1) | 7/10 | 0.719 | 10% | 0 (0.00/km) | 20% | 0% |
+| pilot v3 (+ DAgger round 2) | 7/10 | 0.818 | 20% | 1 (0.29/km) | 0% | 0% |
 
 What the numbers say, and what they don't:
 
@@ -76,6 +79,11 @@ What the numbers say, and what they don't:
   turns leaving the lane, one wrong branch, one kerb strike, one rear-end) are more severe in kind.
 - The student's mean completion (0.82) is clearly below the expert's (0.96): when it fails, it fails
   earlier in the route.
+- **Checkpoint selection on 10 dev routes was not reliable.** By the dev rule (successes, then
+  completion) v3 was selected over v2: same 7/10, higher completion, no off-road. On the 15 test
+  routes, v3 scored 8/15 to v2's 10/15, with two pedestrian collisions where v2 had none. Both rows
+  are reported, the selection was made before the test run, and the demo uses v2 and is labelled v2.
+  The lesson is that a larger dev set is needed before more DAgger rounds can be judged.
 - Dev route 007 ends in a collision within the first seconds for both the expert and every student (a
   vehicle crosses the spawn point). It is kept in the table.
 
