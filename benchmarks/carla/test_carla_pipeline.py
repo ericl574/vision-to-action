@@ -113,6 +113,10 @@ class MetricsTests(unittest.TestCase):
         monitor.update(True, 2, True, 0.0)
         monitor.update(True, 2, False, 0.0)
         self.assertFalse(monitor.update(False, 2, False, 2.0))
+        # Enter on green, light turns red while crossing, leave moving -> committed crossing, not a violation.
+        monitor.update(True, 3, False, 7.0)
+        monitor.update(True, 3, True, 7.0)
+        self.assertFalse(monitor.update(False, 3, True, 7.0))
         self.assertEqual(monitor.violations, 1)
 
     def test_termination_prefers_collision_over_arrival(self):

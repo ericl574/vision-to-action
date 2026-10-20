@@ -213,7 +213,8 @@ class CarlaEnv:
         off_road = drivable is None
         end = self.tracker.end_xy
         dist_to_end = float(math.hypot(location.x - end[0], location.y - end[1]))
-        arrived = dist_to_end < 6.0 or (self.tracker.remaining_m < 8.0 and dist_to_end < 15.0)
+        # Routes can pass close to their own endpoint early on, so arrival also needs route progress.
+        arrived = self.tracker.remaining_m < 12.0 and dist_to_end < 15.0
         return {
             "speed_mps": speed,
             "tl_state": tl_state,
@@ -277,7 +278,7 @@ class CarlaEnv:
             dx, dy = loc.x - ex, loc.y - ey
             forward = dx * fx + dy * fy
             lateral = abs(-dx * fy + dy * fx)
-            if 0.0 < forward < min(best_dist, 20.0) and lateral < 3.0:
+            if 0.0 < forward < min(best_dist, 20.0) and lateral < 2.4:
                 best_dist = forward
                 best = (True, max(0.0, forward - 2.5), "walker")
         return best

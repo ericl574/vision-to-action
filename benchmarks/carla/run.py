@@ -112,7 +112,7 @@ def main():
 
                 if state["expert"] is None:
                     state["expert"] = Expert(env, perturb=False, dt=env.fixed_dt)
-                label = state["expert"].act()
+                label = state["expert"].act(info)
                 if recorder is not None:
                     recorder.append(obs["rgb"], {
                         "t": info["t"], "speed_mps": obs["speed_mps"], "command": obs["command"], "steer": label["steer"],

@@ -34,20 +34,37 @@ class Expert:
         self._perturb_sign = 1.0
         self._perturb_total = 0.0
 
-    def act(self) -> dict:
+    def act(self, info: dict | None = None) -> dict:
         self._emergency = False
         control = self.agent.run_step(debug=False)
         target_kmh = float(getattr(self.agent._local_planner, "_target_speed", 0.0))
         target_mps = 0.0 if self._emergency else target_kmh / 3.6
-        return {"steer": float(control.steer), "throttle": float(control.throttle), "brake": float(control.brake),
+        steer, throttle, brake = float(control.steer), float(control.throttle), float(control.brake)
+        # BehaviorAgent notices crossing pedestrians late and releases the brake too early. The expert is
+        # privileged, so it also stops for any in-lane vehicle/walker inside its stopping distance.
+        if info is not None and info.get("hazard") and self._too_close(info):
+            throttle, brake, target_mps = 0.0, 1.0, 0.0
+            self._emergency = True
+        return {"steer": steer, "throttle": throttle, "brake": brake,
                 "target_speed_mps": target_mps, "emergency": int(self._emergency)}
 
-    def perturbation(self) -> tuple[float, bool]:
-        """Triangular steering offset injected into the *executed* control (labels stay the expert's)."""
+    @staticmethod
+    def _too_close(info: dict) -> bool:
+        speed = float(info.get("speed_mps", 0.0))
+        stopping = speed * speed / (2 * 4.0) + speed * 0.5  # 4 m/s^2 braking + 0.5 s reaction
+        margin = 6.0 if info.get("hazard_type") == "walker" else 4.0
+        return float(info.get("hazard_dist_m", 99.0)) < stopping + margin
+
+    def perturbation(self, command: int = 0, steer: float = 0.0) -> tuple[float, bool]:
+        """Triangular steering offset injected into the *executed* control (labels stay the expert's).
+
+        New perturbations start only while lane-following on a near-straight road; starting one in a
+        turn pushes the car onto the kerb and ends the route instead of teaching recovery.
+        """
         if not self.perturb:
             return 0.0, False
         if self._perturb_left <= 0.0:
-            if self.rng.random() < self.rate * self.dt:
+            if command == 0 and abs(steer) < 0.08 and self.rng.random() < self.rate * self.dt:
                 self._perturb_left = self._perturb_total = self.duration
                 self._perturb_sign = self.rng.choice((-1.0, 1.0))
             else:

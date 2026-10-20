@@ -13,24 +13,28 @@ class RedLightMonitor:
 
     Feed it, every control step, whether the ego is inside the trigger volume of the light that
     governs *its own lane* (``vehicle.is_at_traffic_light()``), that light's id and whether it is
-    red, plus ego speed. Leaving the trigger volume while the light was red and still moving
-    means the stop line was crossed on red. Lights for other lanes never reach this monitor.
+    red, plus ego speed. A violation is entering the trigger volume on red and driving out of it
+    while it is still red. Entering on green/yellow and still being inside when it turns red is a
+    committed, legal crossing. Lights for other lanes never reach this monitor.
     """
 
     def __init__(self, min_speed_mps: float = 0.5):
         self.min_speed_mps = min_speed_mps
-        self._inside = None  # (light_id, was_red_on_last_tick)
+        self._inside = None  # [light_id, entered_on_red, red_on_last_tick]
         self.violations = 0
         self.violated_ids: list = []
 
     def update(self, at_light: bool, light_id, is_red: bool, speed_mps: float) -> bool:
         violation = False
         if at_light:
-            self._inside = (light_id, bool(is_red))
+            if self._inside is None or self._inside[0] != light_id:
+                self._inside = [light_id, bool(is_red), bool(is_red)]
+            else:
+                self._inside[2] = bool(is_red)
         elif self._inside is not None:
-            left_id, was_red = self._inside
+            left_id, entered_red, was_red = self._inside
             self._inside = None
-            if was_red and speed_mps > self.min_speed_mps:
+            if entered_red and was_red and speed_mps > self.min_speed_mps:
                 violation = True
                 self.violations += 1
                 self.violated_ids.append(left_id)

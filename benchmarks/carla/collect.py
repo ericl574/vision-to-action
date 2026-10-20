@@ -107,7 +107,7 @@ def main():
                     if student is not None:
                         student.reset(obs["rgb"])
                 expert = state["expert"]
-                label = expert.act()
+                label = expert.act(info)
                 row = {
                     "t": info["t"], "speed_mps": obs["speed_mps"], "command": obs["command"],
                     "steer": label["steer"], "throttle": label["throttle"], "brake": label["brake"],
@@ -127,7 +127,7 @@ def main():
                     else:
                         exec_control = (s_steer, s_throttle, s_brake)
                 else:
-                    offset, perturbed = expert.perturbation()
+                    offset, perturbed = expert.perturbation(obs["command"], label["steer"])
                     exec_control = (max(-1.0, min(1.0, label["steer"] + offset)), label["throttle"], label["brake"])
                     row.update({"is_perturbed": int(perturbed), "used_expert": 1})
                 row.update({"exec_steer": round(exec_control[0], 4), "exec_throttle": round(exec_control[1], 4),

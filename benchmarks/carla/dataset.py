@@ -70,14 +70,24 @@ def build_samples(roots, history: int = 3, stride: int = 3, val_frac: float = 0.
 
 
 def sample_weights(rows: list[dict]) -> np.ndarray:
-    """Oversample the rare, decision-heavy frames: braking, turning, red lights."""
+    """Oversample the decision moments, not the easy steady states.
+
+    Waiting at a red light is most of the "braking" data and is easy (stopped stays stopped). The
+    frames that decide red-light and pedestrian behaviour are the transitions: moving while the
+    target is zero (start braking) and stopped while the target is positive (start moving again,
+    the classic end-to-end "inertia" failure). Turns are upweighted as before.
+    """
     weights = np.ones(len(rows), dtype=np.float64)
     for i, row in enumerate(rows):
-        if row["target_speed"] < 1.0:
-            weights[i] *= 4.0
-        if abs(row["steer"]) > 0.1 or row["command"] in (1, 2):
-            weights[i] *= 3.0
-        if row["tl_state"] == 3:
+        moving = row["speed"] > 1.0
+        stop_target = row["target_speed"] < 1.0
+        if stop_target and moving:
+            weights[i] *= 5.0
+        elif not stop_target and not moving:
+            weights[i] *= 5.0
+        elif stop_target and not moving:
+            weights[i] *= 0.5
+        if abs(row["steer"]) > 0.1 or (row["command"] in (1, 2) and moving):
             weights[i] *= 3.0
     return weights
 
