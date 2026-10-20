@@ -148,7 +148,7 @@ def main():
                 client = wait_for_server(port=args.port)
                 env = CarlaEnv(client, args.width, args.height, args.fov, vehicles=args.vehicles, walkers=args.walkers, tm_port=args.tm_port)
                 continue
-            recorder.finish(result["status"], result)
+            recorder.finish(result["status"], {k: v for k, v in result.items() if k != "route_id"})  # keep the tagged id
             total_frames += len(recorder.rows)
             print(f"[{i + 1}/{len(routes)}] {route_id}: {result['status']} completion={result['route_completion']:.2f} "
                   f"frames={len(recorder.rows)} red={result['red_light_violations']} total_frames={total_frames} "
