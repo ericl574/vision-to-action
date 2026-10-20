@@ -1,0 +1,16 @@
+status,route_completion,collision_type,red_light_violations,success,route_id,town,weather,route_length_m,distance_m,steps,sim_seconds,wall_seconds,collision_other
+arrived,0.9833417467480676,,0,True,test_town10_000,Town10HD_Opt,ClearNoon,600.3,582.9,2057,205.7,199.0,
+collision,0.6289224858174611,walker,0,False,test_town10_001,Town10HD_Opt,CloudyNoon,371.9,230.7,866,86.6,90.2,walker.pedestrian.0051
+route_deviation,0.03339253034525416,,0,False,test_town10_002,Town10HD_Opt,WetNoon,428.3,22.3,44,4.4,5.0,
+off_road,0.7197920291229991,,0,False,test_town10_003,Town10HD_Opt,SoftRainSunset,330.2,233.9,1127,112.7,114.0,
+route_deviation,0.838923453597604,,0,False,test_town10_004,Town10HD_Opt,ClearNoon,436.5,368.3,1260,126.0,131.8,
+arrived,0.9791798937131703,,0,True,test_town10_005,Town10HD_Opt,CloudyNoon,485.6,472.7,852,85.2,86.6,
+arrived,0.9772874849141356,,0,True,test_town10_006,Town10HD_Opt,WetNoon,440.3,423.5,895,89.5,100.7,
+arrived,0.9686396175291012,,0,True,test_town10_007,Town10HD_Opt,SoftRainSunset,318.9,304.3,467,46.7,48.5,
+arrived,0.9755647958452144,,0,True,test_town10_008,Town10HD_Opt,ClearNoon,467.5,450.8,825,82.5,76.5,
+stuck,0.35232760079408976,,0,False,test_town10_009,Town10HD_Opt,CloudyNoon,588.0,200.4,1501,150.1,153.7,
+collision,0.7777532500194506,walker,0,False,test_town10_010,Town10HD_Opt,WetNoon,300.1,231.6,740,74.0,72.6,walker.pedestrian.0011
+off_road,0.9767675707112844,,0,False,test_town10_011,Town10HD_Opt,SoftRainSunset,526.6,509.0,1630,163.0,166.3,
+arrived,0.9753229932053867,,0,True,test_town10_012,Town10HD_Opt,ClearNoon,405.2,387.9,983,98.3,102.0,
+arrived,0.9783117487988626,,0,True,test_town10_013,Town10HD_Opt,CloudyNoon,461.1,445.3,971,97.1,104.0,
+arrived,0.967931702286799,,0,True,test_town10_014,Town10HD_Opt,WetNoon,360.6,346.3,855,85.5,83.5,
