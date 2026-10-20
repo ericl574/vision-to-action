@@ -254,3 +254,4 @@ __marimo__/
 
 # Local IDE settings
 .vscode/
+!benchmarks/carla/weights/pilot_v*_best_fp16.pt
