@@ -1,0 +1,11 @@
+status,route_completion,collision_type,red_light_violations,success,route_id,town,weather,route_length_m,distance_m,steps,sim_seconds,wall_seconds,collision_other
+arrived,0.977108593665232,,1,False,dev_town10_000,Town10HD_Opt,ClearNoon,436.8,421.2,1447,144.7,70.7,
+arrived,0.9697823230546503,,0,True,dev_town10_001,Town10HD_Opt,CloudyNoon,369.7,354.7,714,71.4,34.4,
+arrived,0.9706235414001806,,0,True,dev_town10_002,Town10HD_Opt,WetNoon,340.4,326.0,814,81.4,40.3,
+arrived,0.9742286679565165,,0,True,dev_town10_003,Town10HD_Opt,SoftRainSunset,388.0,372.4,1114,111.4,50.0,
+arrived,0.9732566479647803,,0,True,dev_town10_004,Town10HD_Opt,ClearNoon,448.7,433.2,1252,125.2,48.9,
+arrived,0.9780578684877754,,0,True,dev_town10_005,Town10HD_Opt,CloudyNoon,546.9,530.3,930,93.0,44.9,
+arrived,0.9721995513405792,,0,True,dev_town10_006,Town10HD_Opt,WetNoon,362.0,348.2,1091,109.1,48.7,
+collision,0.1068105658368704,vehicle,0,False,dev_town10_007,Town10HD_Opt,SoftRainSunset,339.0,37.0,61,6.1,3.3,vehicle.chevrolet.impala
+arrived,0.9750038287084054,,0,True,dev_town10_008,Town10HD_Opt,ClearNoon,400.1,387.5,542,54.2,24.6,
+collision,0.4489543342457143,vehicle,0,False,dev_town10_009,Town10HD_Opt,CloudyNoon,584.8,260.1,386,38.6,16.9,vehicle.ford.mustang
